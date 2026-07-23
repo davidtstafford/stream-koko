@@ -98,5 +98,10 @@ function seedBuiltinVoices(): void {
     stmt.run(v.voice_id, v.name, v.language_code, v.language_name, v.gender, v.description);
   }
 
+  // Remove any built-in voice no longer in the supported list (e.g. previously
+  // seeded non-English voices that kokoro-js does not actually support).
+  const validIds = BUILTIN_VOICES.map(v => `'${v.voice_id}'`).join(',');
+  db.exec(`DELETE FROM tts_voices WHERE is_custom = 0 AND voice_id NOT IN (${validIds})`);
+
   console.log(`Seeded ${BUILTIN_VOICES.length} built-in Kokoro voices`);
 }

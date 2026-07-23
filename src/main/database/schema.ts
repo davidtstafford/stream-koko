@@ -185,7 +185,7 @@ export const BUILTIN_VOICES = [
   { voice_id: 'bm_fable',    name: 'Fable',    language_code: 'en-GB', language_name: 'British English', gender: 'male', description: '' },
   { voice_id: 'bm_george',   name: 'George',   language_code: 'en-GB', language_name: 'British English', gender: 'male', description: '' },
   { voice_id: 'bm_lewis',    name: 'Lewis',    language_code: 'en-GB', language_name: 'British English', gender: 'male', description: '' },
-  // Italian
+  // Italian (bundled .bin files; requires multilingual voice patch in kokoroService)
   { voice_id: 'if_sara',     name: 'Sara',     language_code: 'it-IT', language_name: 'Italian',         gender: 'female', description: '' },
   { voice_id: 'im_nicola',   name: 'Nicola',   language_code: 'it-IT', language_name: 'Italian',         gender: 'male',   description: '' },
   // French
@@ -219,3 +219,6 @@ export const BUILTIN_VOICES = [
   { voice_id: 'zm_yunxia',   name: 'Yunxia',   language_code: 'zh-CN', language_name: 'Mandarin Chinese', gender: 'male',   description: '' },
   { voice_id: 'zm_yunyang',  name: 'Yunyang',  language_code: 'zh-CN', language_name: 'Mandarin Chinese', gender: 'male',   description: '' },
 ];
+// NOTE: kokoro-js v1.x _validate_voice() only hard-codes English voices.
+// Non-English voices work via the runtime patch in kokoroService.ts which
+// checks for a bundled .bin file before rejecting the voice ID.

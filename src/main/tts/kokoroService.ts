@@ -72,10 +72,12 @@ function float32ToWav(samples: Float32Array, sampleRate = 24000): Buffer {
 type KokoroTTSInstance = {
   generate: (text: string, opts: { voice: string; speed?: number }) => Promise<{ audio: Float32Array; sampling_rate: number }>;
   list_voices: () => string[];
+  _validate_voice: (voiceId: string) => string;
 };
 
 let ttsInstance: KokoroTTSInstance | null = null;
 let loadingPromise: Promise<KokoroTTSInstance> | null = null;
+let loadError: string | null = null;
 
 /**
  * Load (or return a cached) Kokoro TTS instance.
@@ -86,6 +88,7 @@ async function getKokoro(): Promise<KokoroTTSInstance> {
   if (ttsInstance) return ttsInstance;
   if (loadingPromise) return loadingPromise;
 
+  loadError = null;
   loadingPromise = (async () => {
     const modelId   = DatabaseService.getSetting('kokoro_model_id')   ?? 'onnx-community/Kokoro-82M-v1.0-ONNX';
     const modelDtype = DatabaseService.getSetting('kokoro_model_dtype') ?? 'q8';
@@ -113,8 +116,33 @@ async function getKokoro(): Promise<KokoroTTSInstance> {
     console.log('[Kokoro] Model loaded');
 
     ttsInstance = instance as unknown as KokoroTTSInstance;
+
+    // Patch _validate_voice to accept non-English voices bundled with kokoro-js.
+    // kokoro-js v1.x hard-codes only the 28 English voice IDs. All Kokoro voices
+    // follow the naming pattern {lang}{gender}_{name} (e.g. "zf_xiaobei").
+    // Patching here avoids any filesystem or require.resolve calls that would
+    // fail inside the webpack-bundled main process.
+    const origValidate = (instance as any)._validate_voice.bind(instance);
+    (instance as any)._validate_voice = function(voiceId: string): string {
+      try {
+        return origValidate(voiceId);
+      } catch {
+        // Accept any voice ID that matches the Kokoro naming convention.
+        // The first character is the phonemiser language code returned to generate().
+        const m = (voiceId as string).match(/^([a-z])[mf]_\w+$/);
+        if (m) return m[1];
+        throw new Error(`Voice "${voiceId}" not found.`);
+      }
+    };
+    console.log('[Kokoro] Multilingual voice validation patched');
+
     return ttsInstance;
   })();
+
+  loadingPromise.catch(err => {
+    loadError = err instanceof Error ? err.message : String(err);
+    loadingPromise = null; // allow retry
+  });
 
   return loadingPromise;
 }
@@ -158,6 +186,10 @@ export async function synthesize(
  */
 export function isModelLoaded(): boolean {
   return ttsInstance !== null;
+}
+
+export function getModelError(): string | null {
+  return loadError;
 }
 
 /**

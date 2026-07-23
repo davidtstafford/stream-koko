@@ -228,7 +228,7 @@ stream-koko/
 │   │   ├── database/
 │   │   │   ├── connection.ts      ← Opens/closes SQLite DB singleton
 │   │   │   ├── schema.ts          ← SCHEMA_SQL DDL + BUILTIN_VOICES constant
-│   │   │   ├── migrations.ts      ← Applies schema; seeds 54 built-in voices (8 languages)
+│   │   │   ├── migrations.ts      ← Applies schema; seeds 54 built-in voices; cleans up removed voices
 │   │   │   ├── service.ts         ← DatabaseService (settings, viewers, chat)
 │   │   │   └── voiceService.ts    ← VoiceService (voices, viewer prefs)
 │   │   ├── tts/
@@ -283,7 +283,7 @@ stream-koko/
 
 ## Voices
 
-Stream Koko ships 54 built-in Kokoro voices across 8 languages, seeded at startup by `migrations.ts` (using `INSERT OR IGNORE`, so new voices appear automatically on next launch for existing installs):
+Stream Koko ships 54 built-in Kokoro voices across 8 languages, seeded at startup by `migrations.ts`.
 
 | Prefix | Language | Gender | Example IDs |
 |---|---|---|---|
@@ -303,7 +303,14 @@ Stream Koko ships 54 built-in Kokoro voices across 8 languages, seeded at startu
 
 Viewers set their voice in Twitch chat: `~setvoice af_heart`
 
-Custom voices can be added via the Voices page. The only compatible format for drop-in custom voices is the `.bin` float32 style-vector files used by `kokoro-js`. The broader community primarily shares `.pt` (PyTorch) files which are **not** compatible. Voice blending (`af_heart:0.6+af_bella:0.4`) is the most practical way to create custom voice combinations without any external files.
+### Multilingual voice support
+`kokoro-js` v1.x hard-codes a validation list of only 28 English voices in `_validate_voice()`.
+`kokoroService.ts` patches this method at runtime: if the voice ID is rejected by the built-in list
+but a matching `.bin` file exists on disk, the patch allows it through. The first character of the
+voice ID is the phonemiser language prefix (`a`=American, `b`=British, `f`=French, `h`=Hindi,
+`e`=Spanish, `p`=Portuguese, `j`=Japanese, `z`=Mandarin, `i`=Italian).
+
+Voice blending (`af_heart:0.6+af_bella:0.4`) also works for custom voice combinations.
 
 ---
 

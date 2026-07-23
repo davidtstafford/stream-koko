@@ -10,7 +10,7 @@ import { getTwitchApiService } from './twitch/twitchApiService';
 import { getOBSServer } from './obs/obsServer';
 import { getApiServer } from './api/apiServer';
 import { getDiscordService } from './discord/discordService';
-import { synthesize, preloadModel, isModelLoaded } from './tts/kokoroService';
+import { synthesize, preloadModel, isModelLoaded, getModelError } from './tts/kokoroService';
 
 console.log('Initializing database...');
 initializeDatabase();
@@ -194,6 +194,7 @@ ipcMain.handle('tts:synthesize', async (_e, opts: { text: string; voiceId: strin
 });
 
 ipcMain.handle('tts:isModelLoaded', () => isModelLoaded());
+ipcMain.handle('tts:getModelError', () => getModelError());
 
 // ── OBS Server ────────────────────────────────────────────────────────────────
 ipcMain.handle('obs:start', async () => {

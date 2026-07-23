@@ -13,6 +13,7 @@ const TTS: React.FC = () => {
   const [queue, setQueue] = useState<TTSQueueItem[]>([]);
   const [currentItem, setCurrentItem] = useState<TTSQueueItem | null>(null);
   const [modelLoaded, setModelLoaded] = useState(false);
+  const [modelError, setModelError] = useState<string | null>(null);
   const [obsRunning, setObsRunning] = useState(false);
   const [obsUrl, setObsUrl] = useState('');
   const [apiUrl, setApiUrl] = useState('http://localhost:8766');
@@ -78,6 +79,8 @@ const TTS: React.FC = () => {
     const modelPoll = setInterval(async () => {
       const loaded = await window.api.invoke('tts:isModelLoaded');
       setModelLoaded(loaded);
+      const err = await window.api.invoke('tts:getModelError');
+      setModelError(err ?? null);
     }, 3000);
 
     return () => { unsubStatus(); clearInterval(modelPoll); };
@@ -287,9 +290,13 @@ const TTS: React.FC = () => {
             </div>
 
             <div style={{ marginTop: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: modelLoaded ? '#00ff00' : '#ffaa00' }} />
+              <div style={{ width: 10, height: 10, borderRadius: '50%', flexShrink: 0, backgroundColor: modelError ? '#ff0000' : modelLoaded ? '#00ff00' : '#ffaa00' }} />
               <span style={{ fontSize: 13, color: '#aaa' }}>
-                {modelLoaded ? 'Kokoro model loaded — ready for TTS' : 'Kokoro model loading… (first run downloads ~170 MB)'}
+                {modelLoaded
+                  ? 'Kokoro model loaded — ready for TTS'
+                  : modelError
+                    ? <span style={{ color: '#ff6666' }}>❌ Model failed to load: {modelError}</span>
+                    : 'Kokoro model loading… (first run downloads ~170 MB)'}
               </span>
             </div>
           </div>
