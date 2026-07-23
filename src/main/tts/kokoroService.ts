@@ -70,7 +70,7 @@ function float32ToWav(samples: Float32Array, sampleRate = 24000): Buffer {
 // ── Service ──────────────────────────────────────────────────────────────────
 
 type KokoroTTSInstance = {
-  generate: (text: string, opts: { voice: string; speed?: number }) => Promise<{ data: Float32Array; sampling_rate: number }>;
+  generate: (text: string, opts: { voice: string; speed?: number }) => Promise<{ audio: Float32Array; sampling_rate: number }>;
   list_voices: () => string[];
 };
 
@@ -142,7 +142,7 @@ export async function synthesize(
 
     const audio = await kokoro.generate(text.trim(), { voice: voiceId, speed });
 
-    const wavBuffer = float32ToWav(audio.data, audio.sampling_rate ?? 24000);
+    const wavBuffer = float32ToWav(audio.audio, audio.sampling_rate ?? 24000);
     const audioData = wavBuffer.toString('base64');
 
     return { success: true, audioData };

@@ -17,7 +17,7 @@ declare module 'kokoro-js' {
     generate(
       text: string,
       options: { voice: string; speed?: number }
-    ): Promise<{ data: Float32Array; sampling_rate: number }>;
+    ): Promise<{ audio: Float32Array; sampling_rate: number }>;
 
     list_voices(): string[];
   }

@@ -275,21 +275,54 @@ const KokoroSetup: React.FC = () => {
         </button>
       </Section>
 
-      {/* ── Adding custom voices ──────────────────────────────────────────── */}
-      <Section title="Adding Custom Voices">
-        <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 12 }}>
-          You can add additional voice IDs to Stream Koko via the <strong>Voices</strong> page.
-          This is useful if you have:
+      {/* ── Getting custom voices ─────────────────────────────────────────── */}
+      <Section title="Getting Custom Voices">
+
+        {/* Option 1 — Voice blending */}
+        <h4 style={{ fontSize: 14, marginBottom: 8 }}>Option 1 — Voice blending (no download needed)</h4>
+        <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 8 }}>
+          Kokoro supports blending two existing voices by combining their IDs with a colon-weight syntax.
+          The weights must add up to 1.0:
         </p>
-        <ul style={{ fontSize: 14, lineHeight: 1.8, paddingLeft: 20, marginBottom: 12 }}>
-          <li>A <strong>voice blend</strong> — Kokoro supports mixing two voices by combining their IDs
-            (e.g. <Code>af_heart:0.7+af_bella:0.3</Code> — check Kokoro docs for syntax)</li>
-          <li>A <strong>fine-tuned</strong> model with additional voice tokens</li>
-          <li>A community-contributed voice pack compatible with your model version</li>
-        </ul>
-        <p style={{ fontSize: 14, color: '#aaa' }}>
-          Custom voices are marked with ⭐ in the voice list and Discord commands,
-          and viewers can use them exactly like built-in voices with <Code>~setvoice</Code>.
+        <div style={{ background: '#1a1a1a', borderRadius: 6, padding: '10px 16px', fontFamily: 'monospace', fontSize: 13, marginBottom: 8 }}>
+          <span style={{ color: '#9147ff' }}>af_heart:0.6+af_bella:0.4</span>
+          <span style={{ color: '#666', marginLeft: 16 }}>60% Heart, 40% Bella</span>
+        </div>
+        <p style={{ fontSize: 13, color: '#aaa', marginBottom: 20 }}>
+          Register the blend string as the voice ID on the Voices page. Viewers can set it as their voice.
+        </p>
+
+        {/* Option 2 — Community (Discord) */}
+        <h4 style={{ fontSize: 14, marginBottom: 8 }}>Option 2 — Community-shared voices</h4>
+        <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 8 }}>
+          There is no public library of drop-in voice files for the ONNX version Kokoro uses.
+          The broader community shares <Code>.pt</Code> (PyTorch) files for the Python library,
+          which are a different format and not compatible with this app.
+        </p>
+        <p style={{ fontSize: 14, lineHeight: 1.7, marginBottom: 8 }}>
+          The best place to find community-made <Code>.bin</Code> voice files is the official
+          Kokoro Discord server, where people occasionally share compatible voice packs:
+        </p>
+        <div style={{ background: '#1a1a1a', borderRadius: 6, padding: '10px 16px', fontFamily: 'monospace', fontSize: 13, marginBottom: 12 }}>
+          <a href="https://discord.gg/QuGxSWBfQy" target="_blank" rel="noreferrer" style={{ color: '#9147ff' }}>
+            discord.gg/QuGxSWBfQy
+          </a>
+          <span style={{ color: '#666', marginLeft: 16 }}>official Kokoro Discord</span>
+        </div>
+        <p style={{ fontSize: 13, color: '#aaa', marginBottom: 8 }}>
+          If you do find a <Code>.bin</Code> file, place it in:
+        </p>
+        <div style={{ background: '#1a1a1a', borderRadius: 5, padding: '8px 12px', marginBottom: 12, fontFamily: 'monospace', fontSize: 12 }}>
+          <span style={{ color: '#888' }}>macOS packaged: </span>
+          <span style={{ color: '#9147ff' }}>Contents/Resources/app.asar.unpacked/node_modules/kokoro-js/voices/</span><br />
+          <span style={{ color: '#888' }}>Dev mode: </span>
+          <span style={{ color: '#9147ff' }}>node_modules/kokoro-js/voices/</span><br />
+          <span style={{ color: '#888' }}>Windows: </span>
+          <span style={{ color: '#9147ff' }}>resources\app.asar.unpacked\node_modules\kokoro-js\voices\</span>
+        </div>
+        <p style={{ fontSize: 13, color: '#aaa' }}>
+          Then register it on the <strong>Voices</strong> page using the filename without <Code>.bin</Code> as the voice ID.
+          Custom voices are marked with ⭐ in the list.
         </p>
       </Section>
 

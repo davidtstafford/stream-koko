@@ -89,7 +89,7 @@ process.env['TRANSFORMERS_CACHE'] = path.join(app.getPath('userData'), 'hf-model
 ```
 
 ### WAV encoding
-Kokoro returns `{ data: Float32Array, sampling_rate: number }` at 24 kHz mono. `float32ToWav()` in `kokoroService.ts` encodes this to a 44-byte RIFF header + Int16 PCM buffer. The result is base64-encoded and sent to the renderer via IPC, then played with `new Audio('data:audio/wav;base64,...')`.
+Kokoro returns a `RawAudio` instance with `{ audio: Float32Array, sampling_rate: number }` at 24 kHz mono. `float32ToWav()` in `kokoroService.ts` encodes this to a 44-byte RIFF header + Int16 PCM buffer. The result is base64-encoded and sent to the renderer via IPC, then played with `new Audio('data:audio/wav;base64,...')`.
 
 ---
 
@@ -228,7 +228,7 @@ stream-koko/
 │   │   ├── database/
 │   │   │   ├── connection.ts      ← Opens/closes SQLite DB singleton
 │   │   │   ├── schema.ts          ← SCHEMA_SQL DDL + BUILTIN_VOICES constant
-│   │   │   ├── migrations.ts      ← Applies schema; seeds 28 built-in voices
+│   │   │   ├── migrations.ts      ← Applies schema; seeds 54 built-in voices (8 languages)
 │   │   │   ├── service.ts         ← DatabaseService (settings, viewers, chat)
 │   │   │   └── voiceService.ts    ← VoiceService (voices, viewer prefs)
 │   │   ├── tts/
@@ -283,7 +283,7 @@ stream-koko/
 
 ## Voices
 
-Stream Koko ships 28 built-in Kokoro voices, seeded at startup by `migrations.ts`:
+Stream Koko ships 54 built-in Kokoro voices across 8 languages, seeded at startup by `migrations.ts` (using `INSERT OR IGNORE`, so new voices appear automatically on next launch for existing installs):
 
 | Prefix | Language | Gender | Example IDs |
 |---|---|---|---|
@@ -291,12 +291,19 @@ Stream Koko ships 28 built-in Kokoro voices, seeded at startup by `migrations.ts
 | `am_` | American English | Male | `am_adam`, `am_echo`, `am_eric`, `am_fenrir`, `am_liam`, `am_michael`, `am_onyx`, `am_puck`, `am_santa` |
 | `bf_` | British English | Female | `bf_alice`, `bf_emma`, `bf_isabella`, `bf_lily` |
 | `bm_` | British English | Male | `bm_daniel`, `bm_fable`, `bm_george`, `bm_lewis` |
+| `if_` / `im_` | Italian | F/M | `if_sara`, `im_nicola` |
+| `ff_` | French | Female | `ff_siwis` |
+| `hf_` / `hm_` | Hindi | F/M | `hf_alpha`, `hf_beta`, `hm_omega`, `hm_psi` |
+| `ef_` / `em_` | Spanish | F/M | `ef_dora`, `em_alex`, `em_santa` |
+| `pf_` / `pm_` | Portuguese | F/M | `pf_dora`, `pm_alex`, `pm_santa` |
+| `jf_` / `jm_` | Japanese | F/M | `jf_alpha`, `jf_gongitsune`, `jf_nezumi`, `jf_tebukuro`, `jm_kumo` |
+| `zf_` / `zm_` | Mandarin Chinese | F/M | `zf_xiaobei`, `zf_xiaoni`, `zf_xiaoxiao`, `zf_xiaoyi`, `zm_yunjian`, `zm_yunxi`, `zm_yunxia`, `zm_yunyang` |
 
 **Default voice:** `af_heart`
 
 Viewers set their voice in Twitch chat: `~setvoice af_heart`
 
-Custom voices can be added via the Voices page (useful for Kokoro voice blends).
+Custom voices can be added via the Voices page. The only compatible format for drop-in custom voices is the `.bin` float32 style-vector files used by `kokoro-js`. The broader community primarily shares `.pt` (PyTorch) files which are **not** compatible. Voice blending (`af_heart:0.6+af_bella:0.4`) is the most practical way to create custom voice combinations without any external files.
 
 ---
 

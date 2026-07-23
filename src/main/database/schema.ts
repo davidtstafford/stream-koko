@@ -185,4 +185,37 @@ export const BUILTIN_VOICES = [
   { voice_id: 'bm_fable',    name: 'Fable',    language_code: 'en-GB', language_name: 'British English', gender: 'male', description: '' },
   { voice_id: 'bm_george',   name: 'George',   language_code: 'en-GB', language_name: 'British English', gender: 'male', description: '' },
   { voice_id: 'bm_lewis',    name: 'Lewis',    language_code: 'en-GB', language_name: 'British English', gender: 'male', description: '' },
+  // Italian
+  { voice_id: 'if_sara',     name: 'Sara',     language_code: 'it-IT', language_name: 'Italian',         gender: 'female', description: '' },
+  { voice_id: 'im_nicola',   name: 'Nicola',   language_code: 'it-IT', language_name: 'Italian',         gender: 'male',   description: '' },
+  // French
+  { voice_id: 'ff_siwis',    name: 'Siwis',    language_code: 'fr-FR', language_name: 'French',          gender: 'female', description: '' },
+  // Hindi
+  { voice_id: 'hf_alpha',    name: 'Alpha',    language_code: 'hi-IN', language_name: 'Hindi',           gender: 'female', description: '' },
+  { voice_id: 'hf_beta',     name: 'Beta',     language_code: 'hi-IN', language_name: 'Hindi',           gender: 'female', description: '' },
+  { voice_id: 'hm_omega',    name: 'Omega',    language_code: 'hi-IN', language_name: 'Hindi',           gender: 'male',   description: '' },
+  { voice_id: 'hm_psi',      name: 'Psi',      language_code: 'hi-IN', language_name: 'Hindi',           gender: 'male',   description: '' },
+  // Spanish
+  { voice_id: 'ef_dora',     name: 'Dora',     language_code: 'es-ES', language_name: 'Spanish',         gender: 'female', description: '' },
+  { voice_id: 'em_alex',     name: 'Alex',     language_code: 'es-ES', language_name: 'Spanish',         gender: 'male',   description: '' },
+  { voice_id: 'em_santa',    name: 'Santa',    language_code: 'es-ES', language_name: 'Spanish',         gender: 'male',   description: '🎅' },
+  // Portuguese
+  { voice_id: 'pf_dora',     name: 'Dora',     language_code: 'pt-BR', language_name: 'Portuguese',      gender: 'female', description: '' },
+  { voice_id: 'pm_alex',     name: 'Alex',     language_code: 'pt-BR', language_name: 'Portuguese',      gender: 'male',   description: '' },
+  { voice_id: 'pm_santa',    name: 'Santa',    language_code: 'pt-BR', language_name: 'Portuguese',      gender: 'male',   description: '🎅' },
+  // Japanese
+  { voice_id: 'jf_alpha',      name: 'Alpha',      language_code: 'ja-JP', language_name: 'Japanese', gender: 'female', description: '' },
+  { voice_id: 'jf_gongitsune', name: 'Gongitsune', language_code: 'ja-JP', language_name: 'Japanese', gender: 'female', description: '' },
+  { voice_id: 'jf_nezumi',     name: 'Nezumi',     language_code: 'ja-JP', language_name: 'Japanese', gender: 'female', description: '' },
+  { voice_id: 'jf_tebukuro',   name: 'Tebukuro',   language_code: 'ja-JP', language_name: 'Japanese', gender: 'female', description: '' },
+  { voice_id: 'jm_kumo',       name: 'Kumo',       language_code: 'ja-JP', language_name: 'Japanese', gender: 'male',   description: '' },
+  // Mandarin Chinese
+  { voice_id: 'zf_xiaobei',  name: 'Xiaobei',  language_code: 'zh-CN', language_name: 'Mandarin Chinese', gender: 'female', description: '' },
+  { voice_id: 'zf_xiaoni',   name: 'Xiaoni',   language_code: 'zh-CN', language_name: 'Mandarin Chinese', gender: 'female', description: '' },
+  { voice_id: 'zf_xiaoxiao', name: 'Xiaoxiao', language_code: 'zh-CN', language_name: 'Mandarin Chinese', gender: 'female', description: '' },
+  { voice_id: 'zf_xiaoyi',   name: 'Xiaoyi',   language_code: 'zh-CN', language_name: 'Mandarin Chinese', gender: 'female', description: '' },
+  { voice_id: 'zm_yunjian',  name: 'Yunjian',  language_code: 'zh-CN', language_name: 'Mandarin Chinese', gender: 'male',   description: '' },
+  { voice_id: 'zm_yunxi',    name: 'Yunxi',    language_code: 'zh-CN', language_name: 'Mandarin Chinese', gender: 'male',   description: '' },
+  { voice_id: 'zm_yunxia',   name: 'Yunxia',   language_code: 'zh-CN', language_name: 'Mandarin Chinese', gender: 'male',   description: '' },
+  { voice_id: 'zm_yunyang',  name: 'Yunyang',  language_code: 'zh-CN', language_name: 'Mandarin Chinese', gender: 'male',   description: '' },
 ];

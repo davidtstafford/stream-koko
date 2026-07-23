@@ -18,6 +18,7 @@ const TTS: React.FC = () => {
   const [apiUrl, setApiUrl] = useState('http://localhost:8766');
   const [muteInApp, setMuteInApp] = useState(false);
   const [testing, setTesting] = useState(false);
+  const [voices, setVoices] = useState<{voice_id: string; name: string; language_name: string}[]>([]);
 
   // Rules
   const [filterCommands, setFilterCommands] = useState(true);
@@ -149,6 +150,9 @@ const TTS: React.FC = () => {
 
     const loaded = await window.api.invoke('tts:isModelLoaded');
     setModelLoaded(loaded);
+
+    const voiceData = await window.api.invoke('db:getAllVoices');
+    setVoices(voiceData ?? []);
   };
 
   const checkObsStatus = async () => {
@@ -293,19 +297,23 @@ const TTS: React.FC = () => {
           <div className="card">
             <h3>Default Voice</h3>
             <p style={{ fontSize: 13, color: '#888', marginBottom: 10 }}>
-              Used for viewers who have not set their own voice. Kokoro voice ID (e.g. <code>af_heart</code>).
-              Go to the <strong>Voices</strong> page to browse all available voices.
+              Used for viewers who have not set their own voice.
+              Go to the <strong>Voices</strong> page to browse or add voices.
             </p>
-            <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-              <input
-                type="text"
-                value={defaultVoice}
-                onChange={e => setDefaultVoice(e.target.value)}
-                placeholder="e.g. af_heart"
-                style={{ width: 200 }}
-              />
-              <button className="primary" onClick={() => save('tts_default_voice', defaultVoice)}>Save</button>
-            </div>
+            <select
+              value={defaultVoice}
+              onChange={e => { setDefaultVoice(e.target.value); save('tts_default_voice', e.target.value); }}
+              style={{ width: 320 }}
+            >
+              {voices.map(v => (
+                <option key={v.voice_id} value={v.voice_id}>
+                  {v.voice_id} — {v.name} ({v.language_name})
+                </option>
+              ))}
+              {voices.length === 0 && (
+                <option value={defaultVoice}>{defaultVoice}</option>
+              )}
+            </select>
           </div>
 
           <div className="card">
@@ -315,11 +323,10 @@ const TTS: React.FC = () => {
               <input
                 type="range" min="0.25" max="4" step="0.05"
                 value={defaultSpeed}
-                onChange={e => setDefaultSpeed(parseFloat(e.target.value))}
+                onChange={e => { const v = parseFloat(e.target.value); setDefaultSpeed(v); save('tts_default_speed', v.toString()); }}
                 style={{ width: '100%', marginTop: 5 }}
               />
             </div>
-            <button className="primary" onClick={() => save('tts_default_speed', defaultSpeed.toString())}>Save Speed</button>
           </div>
 
           <div className="card">
